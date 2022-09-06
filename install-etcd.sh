@@ -49,7 +49,7 @@ rm -fr /usr/local/bin/etcd*
 rm -fr ${ETCD_DATA_DIR}
 
 # download etcd bin
-wget http://github.com/etcd-io/etcd/releases/download/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz
+wget https://github.com/etcd-io/etcd/releases/download/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz
 tar -zvxf etcd-${ETCD_VER}-linux-amd64.tar.gz
 cp -fr etcd-${ETCD_VER}-linux-amd64/etcd* /usr/local/bin/
 
