@@ -43,12 +43,12 @@ done
 
 
 # clean
-rm -fr etcd-${ETCD_VER}-linux-amd64.tar.gz etcd-${ETCD_VER}-linux-amd64
 rm -fr /lib/systemd/system/etcd.service /etc/systemd/system/etcd.service
 rm -fr /usr/local/bin/etcd*
 rm -fr ${ETCD_DATA_DIR}
 
 # download etcd bin
+rm -fr etcd-${ETCD_VER}-linux-amd64.tar.gz etcd-${ETCD_VER}-linux-amd64
 wget https://github.com/etcd-io/etcd/releases/download/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz
 tar -zvxf etcd-${ETCD_VER}-linux-amd64.tar.gz
 cp -fr etcd-${ETCD_VER}-linux-amd64/etcd* /usr/local/bin/

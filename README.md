@@ -3,20 +3,24 @@
 ## 无证书安装
 
 ```bash
-chmod +x install-etcd.sh
+git clone https://github.com/huweihuang/deploy-etcd.git
 
-# 在每台机器上以下命令，-m 表示当前执行机器IP, -n 表示当前节点etcd名称，不同节点需要修改这两个参数，其他参数一样。
-./install-etcd.sh -a <ip1> -b <ip2> -c <ip3> -m <ip1> -n <etcd_name> -v <version> -d <etcd-data-dir>
+# 在每台机器上以下命令，-m 表示当前执行机器IP, -n 表示当前节点etcd名称，不同节点需要修改这两个参数，其他参数一样。<version>和<etcd-data-dir>可不填使用默认值。
+bash install-etcd.sh -a <ip1> -b <ip2> -c <ip3> -m <ip1> -n <etcd_name> -v <version> -d <etcd-data-dir>
 ```
 
 查看部署状态
 
-```
-etcdctl --endpoints=<ip1>:2379,<ip3>:2379,<ip3>:2379 endpoint status -w table
+```bash
+etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 endpoint status -w table
 
-etcdctl --endpoints=<ip1>:2379,<ip3>:2379,<ip3>:2379 put /test test
+etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 put /test test
 
-etcdctl --endpoints=<ip1>:2379,<ip3>:2379,<ip3>:2379 get /test
+etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 get /test
+
+# 使用别名
+alias ectl='etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379'
+ectl endpoint status -w table
 ```
 
 ## 有证书安装
@@ -26,10 +30,10 @@ etcdctl --endpoints=<ip1>:2379,<ip3>:2379,<ip3>:2379 get /test
 查看部署状态
 
 ```bash
-ETCDCTL_API=3 etcdctl --endpoints=<ip1>:2379,<ip3>:2379,<ip3>:2379 --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/server.crt --key=/etc/etcd/pki/server.key endpoint status -w table
+ETCDCTL_API=3 etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/server.crt --key=/etc/etcd/pki/server.key endpoint status -w table
 
 # 或者使用别名
-alias ectl='ETCDCTL_API=3 etcdctl --endpoints=<ip1>:2379,<ip3>:2379,<ip3>:2379 --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/server.crt --key=/etc/etcd/pki/server.key'
+alias ectl='ETCDCTL_API=3 etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/server.crt --key=/etc/etcd/pki/server.key'
 
 ectl endpoint status -w table
 ```
