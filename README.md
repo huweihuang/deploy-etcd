@@ -2,6 +2,8 @@
 
 ## 无证书安装
 
+### 部署Etcd集群
+
 ```bash
 git clone https://github.com/huweihuang/deploy-etcd.git
 
@@ -21,6 +23,14 @@ etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 get /test
 # 使用别名
 alias ectl='etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379'
 ectl endpoint status -w table
+```
+
+### 部署单Etcd节点
+
+```bash
+git clone https://github.com/huweihuang/deploy-etcd.git
+
+bash install-single-etcd.sh <host_ip>
 ```
 
 ## 有证书安装
