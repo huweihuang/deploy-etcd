@@ -5,7 +5,7 @@
 ### 部署Etcd集群
 
 ```bash
-git clone https://github.com/huweihuang/deploy-etcd.git
+wget https://raw.githubusercontent.com/huweihuang/deploy-etcd/main/install-etcd.sh
 
 # 在每台机器上以下命令，-m 表示当前执行机器IP, -n 表示当前节点etcd名称，不同节点需要修改这两个参数，其他参数一样。<version>和<etcd-data-dir>可不填使用默认值。
 bash install-etcd.sh -a <ip1> -b <ip2> -c <ip3> -m <ip1> -n <etcd_name> -v <version> -d <etcd-data-dir>
@@ -28,7 +28,7 @@ ectl endpoint status -w table
 ### 部署单Etcd节点
 
 ```bash
-git clone https://github.com/huweihuang/deploy-etcd.git
+wget https://raw.githubusercontent.com/huweihuang/deploy-etcd/main/install-single-etcd.sh
 
 bash install-single-etcd.sh <host_ip>
 ```
