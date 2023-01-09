@@ -35,7 +35,12 @@ bash install-single-etcd.sh <host_ip>
 
 ## 有证书安装
 
-> TODO
+```bash
+wget https://raw.githubusercontent.com/huweihuang/deploy-etcd/main/install-etcd-with-tls.sh
+
+# 在每台机器上以下命令，-m 表示当前执行机器IP, -n 表示当前节点etcd名称，不同节点需要修改这两个参数，其他参数一样。<version>和<etcd-data-dir>可不填使用默认值。
+bash install-etcd-with-tls.sh -a <ip1> -b <ip2> -c <ip3> -m <ip1> -n <etcd_name> -v <version> -d <etcd-data-dir>
+```
 
 查看部署状态
 
