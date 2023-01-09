@@ -107,6 +107,12 @@ ETCD_PEER_KEY_FILE="${ETCD_PKI_DIR}/peer-key.pem"
 ETCD_PEER_TRUSTED_CA_FILE="${ETCD_PKI_DIR}/ca.pem"
 EOF
 
+# set etcdctl alias
+cat >> $HOME/.bashrc <<EOF
+alias ectl='ETCDCTL_API=3 etcdctl --endpoints=${NODE1_IP}:2379,${NODE2_IP}:2379,${NODE3_IP}:2379 --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/server.crt --key=/etc/etcd/pki/server.key'
+EOF
+source $HOME/.bashrc
+
 systemctl daemon-reload
 systemctl enable etcd
 systemctl restart etcd

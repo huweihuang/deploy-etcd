@@ -1,8 +1,8 @@
 # install etcd
 
-## 无证书安装
+# 无证书安装
 
-### 部署Etcd集群
+## 部署Etcd集群
 
 ```bash
 wget https://raw.githubusercontent.com/huweihuang/deploy-etcd/main/install-etcd.sh
@@ -25,7 +25,7 @@ alias ectl='etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379'
 ectl endpoint status -w table
 ```
 
-### 部署单Etcd节点
+## 部署单Etcd节点
 
 ```bash
 wget https://raw.githubusercontent.com/huweihuang/deploy-etcd/main/install-single-etcd.sh
@@ -33,7 +33,27 @@ wget https://raw.githubusercontent.com/huweihuang/deploy-etcd/main/install-singl
 bash install-single-etcd.sh <host_ip>
 ```
 
-## 有证书安装
+# 有证书安装
+
+## 安装cfssl
+
+```bash
+wget https://raw.githubusercontent.com/huweihuang/deploy-etcd/main/cfssl/install-cfssl.sh
+
+bash install-cfssl.sh
+```
+
+## 创建etcd证书
+
+```bash
+wget https://raw.githubusercontent.com/huweihuang/deploy-etcd/main/setup-tls.sh
+
+bash setup-tls.sh <ip1> <ip2> <ip3>
+```
+
+将etcd.pki.gz的证书上传解压到etcd各节点的/etc/etcd/pki目录下
+
+## 部署etcd集群
 
 ```bash
 wget https://raw.githubusercontent.com/huweihuang/deploy-etcd/main/install-etcd-with-tls.sh
@@ -52,10 +72,3 @@ alias ectl='ETCDCTL_API=3 etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 -
 
 ectl endpoint status -w table
 ```
-
-# troubleshooting
-
-```json
-{"level":"warn","ts":"2022-09-03T18:30:17.536+0800","caller":"embed/config_logging.go:169","msg":"rejected connection","remote-addr":"1.1.1.1:58824","server-name":"","error":"tls: failed to verify client certificate: x509: certificate signed by unknown authority"}
-```
-

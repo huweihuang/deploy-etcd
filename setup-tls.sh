@@ -1,45 +1,102 @@
-#!/bin/bash -x
-export NAME1=etcd01
-export ADDRESS1=xxx
+#!/bin/bash
+set -ex
 
-export NAME2=etcd02
-export ADDRESS2=xxx
+NODE1_IP=$1
+NODE2_IP=$2
+NODE3_IP=$3
 
-export NAME3=etcd03
-export ADDRESS3=xxx
+CERT_DIR="./pki"
+rm -fr ${CERT_DIR} etcd.pki.tgz
+mkdir -p ${CERT_DIR}
+cd ${CERT_DIR}
 
-days=3650
-
-cat > openssl.conf << EOF
-[req]
-req_extensions = v3_req
-distinguished_name = req_distinguished_name
-[req_distinguished_name]
-[ v3_req ]
-keyUsage = critical, digitalSignature, keyEncipherment
-extendedKeyUsage = serverAuth, clientAuth
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = $NAME1
-DNS.2 = $NAME2
-DNS.3 = $NAME3
-IP.1 = 127.0.0.1
-IP.2 = $ADDRESS1
-IP.3 = $ADDRESS2
-IP.4 = $ADDRESS3
+cat > ca-config.json << EOF
+{
+    "signing":{
+        "default":{
+            "expiry":"876000h"
+        },
+        "profiles":{
+            "etcd":{
+                "usages":[
+                    "signing",
+                    "key encipherment",
+                    "server auth",
+                    "client auth"
+                ],
+                "expiry":"876000h"
+            }
+        }
+    }
+}
 EOF
 
+cat > ca-csr.json << EOF
+{
+    "CN": "etcd",
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "C": "CN",
+            "ST": "SH",
+            "L": "SH",
+            "O": "etcd",
+            "OU": "System"
+        }
+    ]
+}
+EOF
 
-# 准备 CA 证书
-[ -f ca.key ] || openssl genrsa -out ca.key 2048
-[ -f ca.crt ] || openssl req -x509 -new -nodes -key ca.key -subj "/CN=etcd-ca" -days ${days} -out ca.crt
+cat > etcd-csr.json << EOF
+{
+    "CN": "etcd",
+    "hosts": [
+        "localhost",
+        "127.0.0.1",
+        "${NODE1_IP}",
+        "${NODE2_IP}",
+        "${NODE3_IP}"
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "C": "CN",
+            "ST": "SH",
+            "L": "SH",
+            "O": "etcd",
+            "OU": "System"
+        }
+    ]
+}
+EOF
 
-# 创建 etcd client 证书
-[ -f client.key ] || openssl genrsa -out client.key 2048
-[ -f client.csr ] || openssl req -new -key client.key -subj "/CN=kube-etcd" -out client.csr -config openssl.conf
-[ -f client.crt ] || openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days ${days} -extensions v3_req  -extfile openssl.conf
+# 生成服务端证书
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=etcd etcd-csr.json | cfssljson -bare server
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=etcd etcd-csr.json | cfssljson -bare peer
 
-# 创建 etcd 集群 peer 间证书
-[ -f peer.key ] || openssl genrsa -out peer.key 2048
-[ -f peer.csr ] || openssl req -new -key peer.key -subj "/CN=kube-etcd-peer" -out peer.csr -config openssl.conf
-[ -f peer.crt ] || openssl x509 -req -in peer.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out peer.crt -days ${days} -extensions v3_req  -extfile openssl.conf
+
+cat > client.json <<EOF
+{
+    "CN": "client",
+    "key": {
+            "algo": "rsa",
+            "size": 2048
+    }
+}
+EOF
+
+# 生成客户端证书
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=etcd client.json  | cfssljson -bare client
+
+# 打包
+cd ..
+tar -zcvf etcd.pki.tgz ./pki
+
+# 将证书上传到etcd各节点的/etc/etcd/pki目录下
