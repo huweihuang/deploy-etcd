@@ -96,7 +96,7 @@ ETCD_LISTEN_CLIENT_URLS="https://${Master_IP}:2379,https://127.0.0.1:2379"
 
 # Server cert
 ETCD_CLIENT_CERT_AUTH="true"
-ETCD_CERT_FILE="${ETCD_PKI_DIR}/server.pem "
+ETCD_CERT_FILE="${ETCD_PKI_DIR}/server.pem"
 ETCD_KEY_FILE="${ETCD_PKI_DIR}/server-key.pem"
 ETCD_TRUSTED_CA_FILE="${ETCD_PKI_DIR}/ca.pem"
 

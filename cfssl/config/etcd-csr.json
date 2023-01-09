@@ -15,7 +15,9 @@
         {
             "C": "CN",
             "ST": "SH",
-            "L": "SH"
+            "L": "SH",
+            "O": "etcd",
+            "OU": "System"
         }
     ]
 }
