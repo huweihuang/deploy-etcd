@@ -109,7 +109,7 @@ EOF
 
 # set etcdctl alias
 cat >> $HOME/.bashrc <<EOF
-alias ectl='ETCDCTL_API=3 etcdctl --endpoints=${NODE1_IP}:2379,${NODE2_IP}:2379,${NODE3_IP}:2379 --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/server.crt --key=/etc/etcd/pki/server.key'
+alias ectl='ETCDCTL_API=3 etcdctl --endpoints=${NODE1_IP}:2379,${NODE2_IP}:2379,${NODE3_IP}:2379 --cacert=/etc/etcd/pki/ca.pem --cert=/etc/etcd/pki/server.pem --key=/etc/etcd/pki/server-key.pem'
 EOF
 source $HOME/.bashrc
 

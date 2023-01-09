@@ -51,7 +51,7 @@ wget https://raw.githubusercontent.com/huweihuang/deploy-etcd/main/setup-tls.sh
 bash setup-tls.sh <ip1> <ip2> <ip3>
 ```
 
-将etcd.pki.gz的证书上传解压到etcd各节点的/etc/etcd/pki目录下
+将`etcd.pki.tgz`的证书上传解压到etcd各节点的/etc/etcd/pki目录下
 
 ## 部署etcd集群
 
@@ -65,10 +65,10 @@ bash install-etcd-with-tls.sh -a <ip1> -b <ip2> -c <ip3> -m <ip1> -n <etcd_name>
 查看部署状态
 
 ```bash
-ETCDCTL_API=3 etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/server.crt --key=/etc/etcd/pki/server.key endpoint status -w table
+ETCDCTL_API=3 etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 --cacert=/etc/etcd/pki/ca.pem --cert=/etc/etcd/pki/server.pem --key=/etc/etcd/pki/server-key.pem endpoint status -w table
 
 # 或者使用别名
-alias ectl='ETCDCTL_API=3 etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/server.crt --key=/etc/etcd/pki/server.key'
+alias ectl='ETCDCTL_API=3 etcdctl --endpoints=<ip1>:2379,<ip2>:2379,<ip3>:2379 --cacert=/etc/etcd/pki/ca.pem --cert=/etc/etcd/pki/server.pem --key=/etc/etcd/pki/server-key.pem'
 
 ectl endpoint status -w table
 ```
