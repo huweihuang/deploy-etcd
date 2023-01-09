@@ -42,8 +42,8 @@ EOF
 # add etcd conf
 mkdir -p /etc/etcd
 cat > /etc/etcd/etcd.conf << EOF
-ETCD_NAME="etcd01"
-ETCD_DATA_DIR="/data/etcd"
+ETCD_NAME="${ETCD_NAME}"
+ETCD_DATA_DIR="${ETCD_DATA_DIR}"
 
 # Client configuration
 ETCD_ADVERTISE_CLIENT_URLS="http://${NODE1_IP}:2379"

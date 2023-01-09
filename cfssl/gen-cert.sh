@@ -6,7 +6,7 @@ NODE2_IP=$2
 NODE3_IP=$3
 
 CERT_DIR="./pki"
-rm -fr ${CERT_DIR}
+rm -fr ${CERT_DIR} etcd.pki.tgz
 mkdir -p ${CERT_DIR}
 cd ${CERT_DIR}
 
